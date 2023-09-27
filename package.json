@@ -1,0 +1,24 @@
+{
+  "name": "furniture-catalog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test/logistic_test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-http": "node bin/http.js",
+    "dev-http": "nodemon bin/http.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "nanoid": "^3.3.6",
+    "validatorjs": "^3.22.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0"
+  }
+}
