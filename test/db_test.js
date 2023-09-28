@@ -4,7 +4,7 @@ const dbConn = require("../lib/dbConnector")({
     password: 'password',
     database: 'furniture_system'
 })
-const repo = require("../src/repo/product_db").InitInstance(dbConn);
+const repo = require("../app/logistic/repo/product_db").InitInstance(dbConn);
 
 async function main() {
     try {

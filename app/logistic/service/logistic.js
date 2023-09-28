@@ -1,5 +1,5 @@
 const Validator = require("validatorjs");
-const {ErrNotFound, Errors} = require("../domain/errors");
+const {ErrNotFound, Errors} = require("../../domain/errors");
 
 class Logistic {
     static #instance;
