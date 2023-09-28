@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-http": "node bin/http.js",
-    "dev-http": "nodemon bin/http.js"
+    "dev-http": "nodemon bin/http.js",
+    "start-queue": "node bin/queue.js",
+    "dev-queue": "nodemon bin/queue.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "express": "^4.18.2",
+    "kafkajs": "^2.2.4",
     "mysql": "^2.18.1",
     "nanoid": "^3.3.6",
     "validatorjs": "^3.22.1"
