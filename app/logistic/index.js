@@ -1,20 +1,20 @@
-class Bootstrap {
+class Logistic {
     static #dbConn;
     static #instance;
 
     static GetInstance() {
         if (!this.#instance) {
-            this.#dbConn = require("./dbConnector")({
+            this.#dbConn = require("../../lib/dbConnector")({
                 host: 'localhost',
                 user: 'apps',
                 password: 'password',
                 database: 'furniture_system'
             });
-            const repo = require("../src/repo/product_db").InitInstance(this.#dbConn);
-            this.#instance = require("../src/service/logistic").InitInstance(repo);
+            const repo = require("./repo/product_db").InitInstance(this.#dbConn);
+            this.#instance = require("./service/logistic").InitInstance(repo);
         }
         return this.#instance;
     }
 }
 
-module.exports = Bootstrap;
+module.exports = Logistic;

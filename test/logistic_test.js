@@ -1,5 +1,5 @@
-const pr = require("../src/repo/product_local").InitInstance();
-const ls = require("../src/service/logistic").InitInstance(pr);
+const pr = require("../app/logistic/repo/product_local").InitInstance();
+const ls = require("../app/logistic/service/logistic").InitInstance(pr);
 
 ls.RegisterProduct("product1", 1000, 100)
     .then(({ID}) => {
