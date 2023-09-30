@@ -29,7 +29,7 @@ class Orders extends Models{
     }
     TotalCost(productRepo) {
         return this.Data().reduce(async (total, order)=>{
-            return total + (await order.Cost());
+            return total + (await order.Cost(productRepo));
         });
     }
 }
