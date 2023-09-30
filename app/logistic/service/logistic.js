@@ -3,8 +3,6 @@ const {ErrNotFound, Errors} = require("../../domain/errors");
 const {Product} = require("../../domain/product");
 
 class Logistic {
-    static #instance;
-
     constructor(repo) {
         this.repo = repo;
     }
@@ -33,17 +31,6 @@ class Logistic {
             throw new ErrNotFound("Product");
         }
         return products.First();
-    }
-
-    static InitInstance(repo) {
-        if (!this.#instance) {
-            this.#instance = new Logistic(repo);
-        }
-        return this.#instance;
-    }
-
-    static GetInstance() {
-        return this.#instance;
     }
 }
 

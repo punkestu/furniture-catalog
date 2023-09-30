@@ -3,24 +3,11 @@ const {Order, Orders} = require("../../domain/order");
 const tName = "orders";
 
 class Order_db {
-    static #instance;
     #conn;
 
     constructor(conn) {
         this.#conn = conn;
     }
-
-    static InitInstance(conn) {
-        if (!this.#instance) {
-            this.#instance = new Order_db(conn);
-        }
-        return this.#instance;
-    }
-
-    static GetInstance() {
-        return this.#instance;
-    }
-
     async Save(order) {
         try {
             if (!order.ID) {
