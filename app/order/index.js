@@ -16,8 +16,8 @@
 // }
 
 module.exports = function (dbConn, productRepo, clientRepo) {
-    const repo = require("./repo/order_db").InitInstance(dbConn);
-    const service = require("./service/order").InitInstance(repo, productRepo, clientRepo);
+    const repo = new (require("./repo/order_db"))(dbConn);
+    const service = new (require("./service/order"))(repo, productRepo, clientRepo);
     const httpHandler = require("./handler/http")(service);
     return {
         repo, httpHandler

@@ -2,8 +2,6 @@ const {Product, Products} = require("../../domain/product");
 const tName = "products";
 
 class Product_db {
-    static #instance;
-
     constructor(conn) {
         this.conn = conn;
     }
@@ -44,17 +42,6 @@ class Product_db {
 
     async Delete(ID) {
         return this.conn.queryAsync(`DELETE FROM ${tName} WHERE id=?`, [ID]);
-    }
-
-    static InitInstance(conn) {
-        if (!this.#instance) {
-            this.#instance = new Product_db(conn);
-        }
-        return this.#instance;
-    }
-
-    static GetInstance() {
-        return this.#instance;
     }
 }
 
