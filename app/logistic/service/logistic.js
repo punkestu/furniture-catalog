@@ -1,5 +1,6 @@
 const Validator = require("validatorjs");
 const {ErrNotFound, Errors} = require("../../domain/errors");
+const {Product} = require("../../domain/product");
 
 class Logistic {
     static #instance;
@@ -19,19 +20,19 @@ class Logistic {
         if (!validation.check()) {
             throw new Errors(400, validation.errors);
         }
-        return this.repo.Save({name, price, qty: initQty});
+        return this.repo.Save(new Product({name, price, qty: initQty}));
     }
 
     async GetProducts() {
-        return this.repo.Load({});
+        return (await this.repo.Load({})).Data();
     }
 
     async GetProductDetail(ID) {
-        const data = await this.repo.Load({ID});
-        if (data.length === 0) {
+        const products = await this.repo.Load({ID});
+        if (products.Count() === 0) {
             throw new ErrNotFound("Product");
         }
-        return data[0];
+        return products.First();
     }
 
     static InitInstance(repo) {

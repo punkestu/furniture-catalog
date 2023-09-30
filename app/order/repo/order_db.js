@@ -1,4 +1,5 @@
 const {nanoid} = require("nanoid");
+const {Order, Orders} = require("../../domain/order");
 const tName = "orders";
 
 class Order_db {
@@ -20,40 +21,21 @@ class Order_db {
         return this.#instance;
     }
 
-    async Save({ID, productID, qty, state, clientID}) {
+    async Save(order) {
         try {
-            if (typeof ID === 'undefined') {
-                ID = nanoid(8);
-                await this.#conn.queryAsync(`INSERT INTO ${tName} VALUES (?,?,?,?,?)`, [ID, productID, qty, state, clientID]);
-            }else{
-                const query = `UPDATE ${tName}`;
-                let sets = [];
-                let pars = [];
-                if (typeof productID !== 'undefined') {
-                    sets.push("product_id=?");
-                    pars.push(productID);
-                }
-                if (typeof qty !== 'undefined') {
-                    sets.push("qty=?");
-                    pars.push(qty);
-                }
-                if (typeof state !== 'undefined') {
-                    sets.push("state=?");
-                    pars.push(state);
-                }
-                if (typeof clientID !== 'undefined') {
-                    sets.push("client_id=?");
-                    pars.push(clientID);
-                }
-                pars.push(ID);
-                await this.#conn.queryAsync(query + (sets.length > 0 ? " SET " : "") + sets.join(",") + " WHERE id=?", pars);
+            if (!order.ID) {
+                order.ID = nanoid(8);
+                await this.#conn.queryAsync(`INSERT INTO ${tName} VALUES (?,?,?,?,?)`, [order.ID, order.productID, order.qty, order.state, order.clientID]);
+            } else {
+                await this.#conn.queryAsync(`UPDATE ${tName} SET product_id=?, qty=?, state=? client_id=? WHERE id=?`, [order.productID, order.qty, order.state, order.clientID, order.ID]);
             }
         } catch (err) {
             throw err;
         }
 
-        return {ID};
+        return order;
     }
+
     async Load({ID, productID, clientID}) {
         let query = `SELECT * FROM ${tName}`;
         let sets = [];
@@ -70,8 +52,14 @@ class Order_db {
             sets.push("client_id=?");
             pars.push(clientID);
         }
-        return this.#conn.queryAsync(query + (sets.length > 0 ? " WHERE " : "") + sets.join(" AND "), pars);
+        const orders = (await this.#conn.queryAsync(
+            query + (sets.length > 0 ? " WHERE " : "") + sets.join(" AND "), pars
+        )).map(order => {
+            return new Order({ID: order.id, productID: order.product_id, clientID: order.client_id, ...order});
+        });
+        return new Orders(orders);
     }
+
     async Delete(ID) {
         return this.#conn.queryAsync(`DELETE FROM ${tName} WHERE id=?`, [ID]);
     }
