@@ -1,4 +1,4 @@
-const {nanoid} = require("nanoid");
+const {Product, Products} = require("../../domain/product");
 const tName = "products";
 
 class Product_db {
@@ -8,34 +8,18 @@ class Product_db {
         this.conn = conn;
     }
 
-    async Save({ID, name, price, qty}) {
+    async Save(product) {
         try {
-            if (typeof ID === 'undefined') {
-                ID = nanoid(8);
-                await this.conn.queryAsync(`INSERT INTO ${tName} VALUES(?,?,?,?)`, [ID, name, price, qty]);
+            if (!product.ID) {
+                product.GenerateID();
+                await this.conn.queryAsync(`INSERT INTO ${tName} VALUES(?,?,?,?)`, [product.ID, product.name, product.price, product.qty]);
             } else {
-                const query = `UPDATE ${tName}`;
-                let sets = [];
-                let pars = [];
-                if (typeof name !== 'undefined') {
-                    sets.push("name=?");
-                    pars.push(name);
-                }
-                if (typeof price !== 'undefined') {
-                    sets.push("price=?");
-                    pars.push(price);
-                }
-                if (typeof qty !== 'undefined') {
-                    sets.push("qty=?");
-                    pars.push(qty);
-                }
-                pars.push(ID);
-                await this.conn.queryAsync(query + (sets.length > 0 ? " SET " : "") + sets.join(",") + " WHERE id=?", pars);
+                await this.conn.queryAsync(`UPDATE ${tName} SET name=?, price=?, qty=? WHERE id=?`, [product.name, product.price, product.qty, product.ID]);
             }
         } catch (e) {
             throw e;
         }
-        return {ID};
+        return product;
     }
 
     async Load({ID, name}) {
@@ -50,7 +34,12 @@ class Product_db {
             sets.push("name=?");
             pars.push(name);
         }
-        return this.conn.queryAsync(query + (sets.length > 0 ? " WHERE " : "") + sets.join(" AND "), pars);
+        const products = (await this.conn.queryAsync(
+            query + (sets.length > 0 ? " WHERE " : "") + sets.join(" AND "), pars
+        )).map(product => {
+            return new Product({ID: product.id, ...product});
+        });
+        return new Products(products);
     }
 
     async Delete(ID) {
