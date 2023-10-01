@@ -58,8 +58,10 @@ class Person {
             if (!person) {
                 throw new Errors(404, new ErrNotFound("Person"));
             }
-            person.state = "confirmed";
-            person = await this.#dbRepo.Save(person);
+            if (person.state === "pending") {
+                person.state = "confirmed";
+                person = await this.#dbRepo.Save(person);
+            }
         } else if (command === "login") {
             person = (await this.#dbRepo.Load({ID})).First();
         }
