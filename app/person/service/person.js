@@ -1,5 +1,5 @@
 const {Person: PersonM} = require("../../domain/person");
-const {ErrNotFound} = require("../../domain/errors");
+const {ErrNotFound, Errors} = require("../../domain/errors");
 
 class Person {
     #dbRepo;
@@ -14,7 +14,7 @@ class Person {
 
     async Register(name, email) {
         const person = await this.#dbRepo.Save(new PersonM({name, email, role: "client", state: "pending"}));
-        await this.#queue.Push("person", "register", person);
+        await this.#queue.Push("person", "send-mail", JSON.stringify(person));
         return person;
     }
 
@@ -23,21 +23,30 @@ class Person {
         if (persons.IsEmpty()) {
             throw new ErrNotFound("Person");
         }
-        await this.#queue.Push("person", "register", persons.First());
+        await this.#queue.Push("person", "send-mail", JSON.stringify(persons.First()));
         return persons.First();
     }
 
     async SendMail(person){
-        return await this.#emailProv.Save(person);
+        return setTimeout(() => {
+            return this.#emailProv.Save(person);
+        }, 5000);
     }
 
     async ConfirmPerson(ID, command) {
         let person;
         if (command === "register") {
-            person = await this.#dbRepo.Save(new PersonM({ID, state: "confirmed"}));
+            person = (await this.#dbRepo.Load({ID})).First();
+            if(!person){
+                throw new Errors(404, new ErrNotFound("Person"));
+            }
+            person.state = "confirmed";
+            person = await this.#dbRepo.Save(person);
         } else if (command === "login") {
             person = (await this.#dbRepo.Load({ID})).First();
         }
         return person;
     }
 }
+
+module.exports = Person;

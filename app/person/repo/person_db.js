@@ -8,6 +8,7 @@ class Person_db {
         this.#conn = conn;
     }
     async Save(person){
+        console.log(person);
         if(!person.ID){
             person.GenerateID();
             await this.#conn.queryAsync(`INSERT INTO ${tName} VALUES(?,?,?,?,?)`, [person.ID, person.name, person.email, person.role, person.state]);
