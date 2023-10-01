@@ -12,6 +12,10 @@ class Model {
             this.ID = nanoid(8);
         }
     }
+
+    JSON() {
+        return {...this};
+    }
 }
 
 class Models {
@@ -35,6 +39,12 @@ class Models {
 
     First() {
         return this.#data[0];
+    }
+
+    JSON() {
+        return this.#data.map(d=>{
+            return {...d};
+        });
     }
 }
 
