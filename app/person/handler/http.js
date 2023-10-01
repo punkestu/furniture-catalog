@@ -4,7 +4,7 @@ module.exports = function (service) {
     router.post("/registration", async (req, res) => {
         try {
             const {name, email} = req.body;
-            const person = await service.Register(name, email);
+            await service.Register(name, email);
             res.json({
                 state: "wait for email"
             });
