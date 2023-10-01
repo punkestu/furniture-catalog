@@ -4,13 +4,11 @@ const {ErrNotFound} = require("../../domain/errors");
 class Person {
     #dbRepo;
     #emailProv;
-    #jwt;
     #queue;
 
-    constructor(dbRepo, emailProv, jwt, queue) {
+    constructor(dbRepo, emailProv, queue) {
         this.#dbRepo = dbRepo;
         this.#emailProv = emailProv;
-        this.#jwt = jwt;
         this.#queue = queue;
     }
 
@@ -33,14 +31,13 @@ class Person {
         return await this.#emailProv.Save(person);
     }
 
-    async ConfirmPerson(token) {
-        const {ID, command} = this.#jwt.verify(token);
+    async ConfirmPerson(ID, command) {
         let person;
         if (command === "register") {
             person = await this.#dbRepo.Save(new PersonM({ID, state: "confirmed"}));
         } else if (command === "login") {
             person = (await this.#dbRepo.Load({ID})).First();
         }
-        return this.#jwt.sign({ID: person.ID, command: "authToken"});
+        return person;
     }
 }
