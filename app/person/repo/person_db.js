@@ -1,5 +1,4 @@
-const {Person} = require("../../domain/person");
-const {Models} = require("../../domain/model");
+const {Person, Persons} = require("../../domain/person");
 const tName = "persons";
 
 class Person_db {
@@ -35,7 +34,7 @@ class Person_db {
         )).map(person => {
             return new Person({ID: person.id, ...person});
         });
-        return new Models(persons);
+        return new Persons(persons);
     }
 }
 

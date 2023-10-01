@@ -6,8 +6,7 @@ module.exports = function (service) {
             const {name, email} = req.body;
             const person = await service.Register(name, email);
             res.json({
-                created_id: person.ID,
-                state: person.state
+                state: "wait for email"
             });
         } catch (err) {
             console.log(err);
@@ -20,10 +19,9 @@ module.exports = function (service) {
     router.post("/login", async (req, res) => {
         try {
             const {email} = req.body;
-            const person = await service.Login(email);
+            await service.Login(email);
             res.json({
-                created_id: person.ID,
-                state: person.state
+                state: "wait for email"
             });
         } catch (err) {
             console.log(err);

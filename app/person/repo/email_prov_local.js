@@ -7,9 +7,9 @@ class Email_prov_local {
 
     async Save(person) {
         if (person.state === "pending") {
-            console.log(`localhost:3000/person/auth?id=${person.ID}&command=register`);
+            console.log(`http://localhost:3000/person/auth?id=${person.ID}&command=register`);
         }else{
-            console.log(`localhost:3000/person/auth?id=${person.ID}&command=login`);
+            console.log(`http://localhost:3000/person/auth?id=${person.ID}&command=login`);
         }
         return person;
     }

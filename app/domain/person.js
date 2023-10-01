@@ -1,10 +1,11 @@
-const {Model} = require("./model");
+const {Model, Models} = require("./model");
 
 class Person extends Model {
     name;
     email;
     role;
     state;
+
     constructor({ID, name, email, role, state}) {
         super(ID);
         this.name = name;
@@ -14,4 +15,21 @@ class Person extends Model {
     }
 }
 
-module.exports = {Person};
+class Persons extends Models {
+    constructor(persons) {
+        super(persons);
+    }
+
+    Names() {
+        return this.Data().map(person => {
+            return person.name;
+        });
+    }
+    Emails() {
+        return this.Data().map(person => {
+            return person.email;
+        });
+    }
+}
+
+module.exports = {Person, Persons};
