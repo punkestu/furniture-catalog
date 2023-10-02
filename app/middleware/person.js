@@ -12,8 +12,12 @@ module.exports = function (clientRepo) {
             if (!auth) {
                 return res.status(403).json(new ErrForbidden("Token is invalid"));
             }
-            if ((await clientRepo.Load({ID})).IsEmpty()) {
+            const person = (await clientRepo.Load({ID})).First();
+            if (!person) {
                 return res.status(403).json(new ErrForbidden("Token is invalid"));
+            }
+            if(person.state === "pending") {
+                return res.status(403).json(new ErrForbidden("User is not confirmed yet"));
             }
             req.body.client_id = ID;
             req.body.role = role;
