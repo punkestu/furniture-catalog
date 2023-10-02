@@ -1,8 +1,8 @@
 const {Errors} = require("../../domain/errors");
 
-module.exports = function (service) {
+module.exports = function (service, {TokenValidation}) {
     const router = require("express").Router();
-    router.post("/", async (req, res) => {
+    router.post("/", TokenValidation, async (req, res) => {
         try {
             const {product_id: productID, qty, client_id: clientID} = req.body;
             const {ID} = await service.CreateOrder(productID, qty, clientID);

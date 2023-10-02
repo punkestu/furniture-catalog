@@ -18,7 +18,8 @@
 module.exports = function (dbConn, productRepo, clientRepo) {
     const repo = new (require("./repo/order_db"))(dbConn);
     const service = new (require("./service/order"))(repo, productRepo, clientRepo);
-    const httpHandler = require("./handler/http")(service);
+    const personMidd = require("../middleware/person")(clientRepo);
+    const httpHandler = require("./handler/http")(service, personMidd);
     return {
         repo, httpHandler
     };
