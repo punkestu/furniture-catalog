@@ -7,8 +7,8 @@ const dbFurnitureSystem = require("../lib/dbConnector")({
 const queue = require("../lib/mbConnector")
     .GetInstance("server1", ["localhost:9092"]);
 
-const logistic = require("../app/logistic")(dbFurnitureSystem);
 const person = require("../app/person")(dbFurnitureSystem, queue);
+const logistic = require("../app/logistic")(dbFurnitureSystem, person.repo);
 const order = require("../app/order")(dbFurnitureSystem, logistic.repo, person.repo);
 
 const router = require("express").Router();

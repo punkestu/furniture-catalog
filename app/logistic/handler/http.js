@@ -1,9 +1,9 @@
 const {log} = require("../../../lib/logger");
 const {Errors, ErrNotFound} = require("../../domain/errors");
 
-module.exports = function (service) {
+module.exports = function (service, {TokenValidation, IsAdmin}) {
     const router = require("express").Router();
-    router.get("/", (req, res) => {
+    router.get("/", TokenValidation, (req, res) => {
         service.GetProducts()
             .then(products => {
                 res.json(products);
@@ -14,7 +14,7 @@ module.exports = function (service) {
             });
     });
 
-    router.post("/", (req, res) => {
+    router.post("/", TokenValidation, IsAdmin, (req, res) => {
         const {name, price, init_qty} = req.body;
         service.RegisterProduct(name, price, init_qty)
             .then(({ID}) => {
