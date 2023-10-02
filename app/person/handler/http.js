@@ -35,9 +35,10 @@ module.exports = function (service) {
     });
     router.get("/auth", async (req, res) => {
         try {
-            const {id: ID, command} = req.query;
+            const {code} = req.query;
+            const {ID, command} = jwt.Verify(code);
             const person = await service.ConfirmPerson(ID, command);
-            res.json({access_token: jwt.Sign({ID: person.ID, role: person.role})});
+            res.json({access_token: jwt.Sign({ID: person.ID, role: person.role, auth: true})});
         } catch (err) {
             console.log(err);
             if (err instanceof Errors) {
