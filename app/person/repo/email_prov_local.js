@@ -1,3 +1,5 @@
+const jwt = require("../../../lib/jwt");
+
 class Email_prov_local {
     #conn;
 
@@ -6,11 +8,16 @@ class Email_prov_local {
     }
 
     async Save(person) {
+        const code = {
+            ID: person.ID,
+            command: ""
+        };
         if (person.state === "pending") {
-            console.log(`http://localhost:3000/person/auth?id=${person.ID}&command=register`);
-        }else{
-            console.log(`http://localhost:3000/person/auth?id=${person.ID}&command=login`);
+            code.command = "register";
+        } else {
+            code.command = "login";
         }
+        console.log(`http://localhost:3000/person/auth?code=${jwt.Sign(code)}`);
         return person;
     }
 }
