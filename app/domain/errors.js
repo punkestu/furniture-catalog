@@ -6,6 +6,30 @@ class ErrNotFound extends Error {
     }
 }
 
+class ErrForbidden extends Error {
+    constructor(cause) {
+        super("forbidden");
+        this.name = "Forbidden";
+        this.cause = cause;
+    }
+}
+
+class ErrOutOfStock extends Error{
+    constructor() {
+        super("out of stock");
+        this.name = "Out of stock";
+        this.cause = "Product"
+    }
+}
+
+class ErrUnauthorized extends Error{
+    constructor(cause) {
+        super("unauthorized");
+        this.name = "Unauthorized";
+        this.cause = cause;
+    }
+}
+
 class Errors {
     errors;
     code;
@@ -17,5 +41,8 @@ class Errors {
 
 module.exports = {
     ErrNotFound,
+    ErrForbidden,
+    ErrOutOfStock,
+    ErrUnauthorized,
     Errors
 };
